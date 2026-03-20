@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sample Delivery System UI</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="page">
+      <header class="header">
+        <div>
+          <h1>Sample Delivery System</h1>
+          <p class="subtitle">UI demo để gọi API giao hàng</p>
+          <div class="connection">
+            <span class="label">Kết nối API</span>
+            <span id="connectionStatus" class="status pending"
+              >Chưa kiểm tra</span
+            >
+            <button id="btnPing" class="secondary">Kiểm tra kết nối</button>
+          </div>
+        </div>
+        <div class="base-url">
+          <span>Base URL</span>
+          <code id="baseUrl">https://sample-delivery-system.vercel.app</code>
+          <span class="hint">Đang gọi trực tiếp từ Vercel</span>
+        </div>
+      </header>
+
+      <section class="card">
+        <div class="card-header">
+          <h2>Cập nhật trạng thái</h2>
+          <span class="badge">POST /mark-*</span>
+        </div>
+        <div class="stack">
+          <div class="grid two-cols">
+            <label>
+              Shipment ID
+              <input id="shipmentId" placeholder="Nhập shipment id" />
+            </label>
+            <label>
+              URL hình ảnh (cách nhau bằng dấu phẩy)
+              <input
+                id="mediaUrls"
+                placeholder="https://image1, https://image2"
+              />
+            </label>
+          </div>
+          <div class="actions">
+            <button id="btnReceive" class="secondary">Mark Receive</button>
+            <button id="btnComplete">Mark Complete</button>
+            <button id="btnFail" class="danger">Mark Fail</button>
+          </div>
+        </div>
+        <pre id="statusResult" class="result"></pre>
+      </section>
+
+      <section class="card">
+        <div class="card-header">
+          <h2>Danh sách shipment</h2>
+          <div class="card-actions">
+            <span class="badge">GET /ships</span>
+            <button id="btnRefresh" class="secondary">Tải lại</button>
+          </div>
+        </div>
+        <div id="shipList" class="ship-list"></div>
+      </section>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
