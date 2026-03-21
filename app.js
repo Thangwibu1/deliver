@@ -161,6 +161,25 @@ const animateCounter = (el, targetValue) => {
   requestAnimationFrame(tick);
 };
 
+const copyText = async (text) => {
+  if (!text) throw new Error("Nothing to copy");
+
+  if (navigator.clipboard?.writeText) {
+    await navigator.clipboard.writeText(text);
+    return;
+  }
+
+  const ta = document.createElement("textarea");
+  ta.value = text;
+  ta.setAttribute("readonly", "");
+  ta.style.position = "fixed";
+  ta.style.top = "-9999px";
+  document.body.appendChild(ta);
+  ta.select();
+  document.execCommand("copy");
+  document.body.removeChild(ta);
+};
+
 // ─────────────────────────────────────────────────────────
 // API Helper
 // ─────────────────────────────────────────────────────────
@@ -226,7 +245,10 @@ const buildShipCard = (ship, onClickCb) => {
   item.onclick = onClickCb;
   item.innerHTML = `
     <div class="ship-item-header">
-      <span class="ship-id">#${ship._id.slice(-8)}</span>
+      <div class="ship-id-row">
+        <span class="ship-id" title="${ship._id}">ID: ${ship._id}</span>
+        <button class="ship-copy-btn" type="button" data-copy-id="${ship._id}" title="Copy full shipment ID">Copy</button>
+      </div>
       <span class="status-tag ${statusCls}">${ship.status || "pending"}</span>
     </div>
     <div class="ship-invoice">Invoice: ${ship.invoiceId || "N/A"}</div>
@@ -242,6 +264,18 @@ const buildShipCard = (ship, onClickCb) => {
       </span>
       <span class="ship-cost">$ ${Number(ship.shipCost ?? 0).toLocaleString("en-US")}</span>
     </div>`;
+
+  const copyBtn = item.querySelector(".ship-copy-btn");
+  copyBtn?.addEventListener("click", async (event) => {
+    event.stopPropagation();
+    try {
+      await copyText(ship._id);
+      showToast("success", "Copied", "Shipment ID copied to clipboard.");
+    } catch {
+      showToast("error", "Copy Failed", "Unable to copy shipment ID.");
+    }
+  });
+
   return item;
 };
 

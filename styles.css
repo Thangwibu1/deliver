@@ -744,12 +744,39 @@ button:disabled {
   margin-bottom: 0.625rem;
 }
 
+.ship-id-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
 .ship-id {
   font-family: var(--font-mono);
   font-size: 0.6875rem;
   font-weight: 600;
   color: var(--text-muted);
   letter-spacing: 0.03em;
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ship-copy-btn {
+  border: 1px solid var(--mint-200);
+  background: var(--mint-50);
+  color: var(--mint-800);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  line-height: 1;
+  border-radius: 999px;
+  padding: 0.25rem 0.55rem;
+}
+
+.ship-copy-btn:hover {
+  background: var(--mint-100);
+  border-color: var(--mint-400);
 }
 
 .ship-invoice {
