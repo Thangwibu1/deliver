@@ -17,6 +17,10 @@ const btnComplete = document.getElementById("btnComplete");
 const btnFail = document.getElementById("btnFail");
 const btnRefresh = document.getElementById("btnRefresh");
 const btnPing = document.getElementById("btnPing");
+const btnGetShipFee = document.getElementById("btnGetShipFee");
+const btnUpdateShipFee = document.getElementById("btnUpdateShipFee");
+const shipFeeInput = document.getElementById("shipFeeInput");
+const currentShipFee = document.getElementById("currentShipFee");
 
 const stats = {
   total: document.getElementById("statTotal"),
@@ -197,6 +201,72 @@ const request = async (baseUrl, path, options = {}) => {
       data?.message || (typeof data === "string" ? data : "Request failed"),
     );
   return data;
+};
+
+const formatVnd = (value) => {
+  const num = Number(value);
+  if (Number.isNaN(num)) return "—";
+  return `${num.toLocaleString("vi-VN")} đ`;
+};
+
+const loadShipFee = async () => {
+  try {
+    setLoading(btnGetShipFee, true);
+    const data = await request(BASE_URL, "/ship-fee");
+    const fee = data?.data?.shipFee;
+    if (typeof fee !== "number") throw new Error("Invalid ship fee response");
+
+    if (currentShipFee) currentShipFee.textContent = formatVnd(fee);
+    if (shipFeeInput) shipFeeInput.value = String(fee);
+    return fee;
+  } catch (err) {
+    const isNotFound =
+      err?.message?.includes("Global ship fee config not found") ||
+      err?.message?.includes("404");
+
+    if (isNotFound) {
+      if (currentShipFee) currentShipFee.textContent = "Chưa có giá ship";
+      showToast(
+        "warning",
+        "Chưa có phí ship",
+        "Hãy nhập phí ship và bấm Update Ship Fee để khởi tạo."
+      );
+      return null;
+    }
+
+    if (currentShipFee) currentShipFee.textContent = "Cannot load fee";
+    showToast("error", "Load Ship Fee Error", err.message);
+    throw err;
+  } finally {
+    setLoading(btnGetShipFee, false);
+  }
+};
+
+const updateShipFee = async () => {
+  const fee = Number(shipFeeInput?.value?.trim());
+  if (Number.isNaN(fee) || fee < 0) {
+    showToast("warning", "Invalid Fee", "Ship fee must be a non-negative number.");
+    return;
+  }
+
+  try {
+    setLoading(btnUpdateShipFee, true);
+    const data = await request(BASE_URL, "/ship-fee", {
+      method: "POST",
+      body: JSON.stringify({ fee }),
+    });
+
+    const newFee = data?.data?.shipFee;
+    if (typeof newFee === "number" && currentShipFee) {
+      currentShipFee.textContent = formatVnd(newFee);
+    }
+
+    showToast("success", "Ship Fee Updated", `Global ship fee is now ${formatVnd(fee)}.`);
+  } catch (err) {
+    showToast("error", "Update Ship Fee Error", err.message);
+  } finally {
+    setLoading(btnUpdateShipFee, false);
+  }
 };
 
 // ─────────────────────────────────────────────────────────
@@ -492,6 +562,12 @@ btnRefresh?.addEventListener("click", () => {
 });
 
 btnPing?.addEventListener("click", pingServer);
+btnGetShipFee?.addEventListener("click", () => {
+  loadShipFee();
+});
+btnUpdateShipFee?.addEventListener("click", () => {
+  updateShipFee();
+});
 
 // ─────────────────────────────────────────────────────────
 // Init
@@ -499,6 +575,7 @@ btnPing?.addEventListener("click", pingServer);
 navigateTo("dashboard");
 pingServer();
 loadShips();
+loadShipFee();
 
 // Auto-refresh every 20s
 setInterval(loadShips, 20_000);

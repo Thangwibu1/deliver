@@ -874,6 +874,24 @@ button:disabled {
   border: 1px solid rgba(165, 243, 252, 0.1);
 }
 
+/* ====== SHIP FEE PANEL ====== */
+.divider {
+  border: none;
+  border-top: 1px dashed var(--border);
+  margin: 1rem 0 1rem;
+}
+
+.fee-preview {
+  background: var(--mint-50);
+  border: 1px solid var(--mint-200);
+  border-radius: var(--radius);
+  padding: 0.625rem 0.875rem;
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  color: var(--mint-900);
+  font-weight: 700;
+}
+
 /* ====== INTEGRATION PANEL ====== */
 .integration-status-row {
   display: flex;

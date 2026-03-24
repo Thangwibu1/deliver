@@ -236,6 +236,23 @@
                   </svg>
                   Ping ShipSim API
                 </button>
+
+                <hr class="divider" />
+
+                <div class="input-group" style="margin-bottom:0.75rem">
+                  <label>Global Ship Fee (all addresses)</label>
+                  <div id="currentShipFee" class="fee-preview">Loading...</div>
+                </div>
+
+                <div class="input-group">
+                  <label for="shipFeeInput">Set New Ship Fee (VND)</label>
+                  <input id="shipFeeInput" type="text" placeholder="e.g. 30000" />
+                </div>
+
+                <div class="btn-group" style="margin-top:0.25rem">
+                  <button id="btnGetShipFee" class="btn-secondary">Get Ship Fee</button>
+                  <button id="btnUpdateShipFee" class="btn-primary">Update Ship Fee</button>
+                </div>
               </div>
             </div>
           </div>
