@@ -332,7 +332,7 @@ const buildShipCard = (ship, onClickCb) => {
         </svg>
         ${createdAt}
       </span>
-      <span class="ship-cost">$ ${Number(ship.shipCost ?? 0).toLocaleString("en-US")}</span>
+      <span class="ship-cost">${formatVnd(ship.shipCost ?? 0)}</span>
     </div>`;
 
   const copyBtn = item.querySelector(".ship-copy-btn");
